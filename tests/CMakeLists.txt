@@ -21,3 +21,8 @@ target_include_directories(tests PRIVATE
 
 include(GoogleTest)
 gtest_discover_tests(tests)
+
+if(COVERAGE)
+    target_compile_options(tests PRIVATE -O0 -g --coverage)
+    target_link_options(tests PRIVATE --coverage)
+endif()

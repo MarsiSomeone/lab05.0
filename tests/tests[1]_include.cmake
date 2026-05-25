@@ -1,5 +1,0 @@
-if(EXISTS "/home/marsi/MarsiSomeone/tasks/lab05/banking/tests/tests[1]_tests.cmake")
-  include("/home/marsi/MarsiSomeone/tasks/lab05/banking/tests/tests[1]_tests.cmake")
-else()
-  add_test(tests_NOT_BUILT tests_NOT_BUILT)
-endif()

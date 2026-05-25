@@ -22,6 +22,11 @@ set_target_properties(banking PROPERTIES
     SOVERSION 1
 )
 
+if(COVERAGE)
+    target_compile_options(banking PRIVATE -O0 -g --coverage)
+    target_link_options(banking PRIVATE --coverage)
+endif()
+
 if(BUILD_TESTS)
     enable_testing()
 

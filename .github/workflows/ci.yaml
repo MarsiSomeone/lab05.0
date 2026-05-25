@@ -9,10 +9,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Запрещаем использовать кэш
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    
+    - name: Clean everything
+      run: |
+        # Полная очистка перед началом
+        git clean -fdx
+        git reset --hard HEAD
     
     - name: Install dependencies
       run: |
@@ -21,32 +31,19 @@ jobs:
     
     - name: Build and test
       run: |
-        mkdir -p build
+        mkdir build
         cd build
         cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON
         make -j$(nproc)
         ctest --output-on-failure
     
-    - name: Check coverage
+    - name: Check 100% coverage
       run: |
         cd build
         gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --print-summary
-        COVERAGE=$(gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --print-summary | grep -oP 'lines: \K\d+\.\d+')
-        if (( $(echo "$COVERAGE < 100.0" | bc -l) )); then
-          echo "Coverage is $COVERAGE% (need 100%)"
+        COVERAGE=$(gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --print-summary 2>/dev/null | grep -oP 'lines: \K\d+')
+        if [ "$COVERAGE" != "100" ]; then
+          echo "Coverage is $COVERAGE% (100% required)"
           exit 1
-        else
-          echo "Coverage is $COVERAGE%"
         fi
-    
-    - name: Generate HTML report
-      run: |
-        cd build
-        gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --html --html-details -o coverage_report.html
-        echo "Report saved to build/coverage_report.html"
-    
-    - name: Upload report
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: build/coverage_report.html
+        echo "Code coverage is 100%"
