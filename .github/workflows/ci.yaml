@@ -1,13 +1,13 @@
-name: CI for Banking Library
+name: CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
 
 jobs:
-  build-and-test-ubuntu:
+  test:
     runs-on: ubuntu-latest
     
     steps:
@@ -17,27 +17,36 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake build-essential lcov gcovr
+        sudo apt-get install -y cmake build-essential gcovr
     
-    - name: Configure CMake
+    - name: Build and test
       run: |
         mkdir -p build
         cd build
-        cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
-    
-    - name: Build
-      run: |
-        cd build
+        cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON
         make -j$(nproc)
-    
-    - name: Run tests
-      run: |
-        cd build
         ctest --output-on-failure
     
-    - name: Upload test results
-      if: always()
+    - name: Check coverage
+      run: |
+        cd build
+        gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --print-summary
+        COVERAGE=$(gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --print-summary | grep -oP 'lines: \K\d+\.\d+')
+        if (( $(echo "$COVERAGE < 100.0" | bc -l) )); then
+          echo "Coverage is $COVERAGE% (need 100%)"
+          exit 1
+        else
+          echo "Coverage is $COVERAGE%"
+        fi
+    
+    - name: Generate HTML report
+      run: |
+        cd build
+        gcovr --root .. --filter ../Account.cpp --filter ../Transaction.cpp --html --html-details -o coverage_report.html
+        echo "Report saved to build/coverage_report.html"
+    
+    - name: Upload report
       uses: actions/upload-artifact@v4
       with:
-        name: test-results-ubuntu
-        path: build/Testing/
+        name: coverage-report
+        path: build/coverage_report.html
