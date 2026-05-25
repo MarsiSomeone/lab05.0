@@ -1,0 +1,42 @@
+name: CI
+
+on: 
+  push:
+    branches: [main, master]
+  pull-request:
+    branches: [main, master]
+
+jobs:
+    build-and-test-ubuntu:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      uses: action/checkout@v4
+
+
+    - name: Configure CMake
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
+    
+    - name: Build
+      run: |
+        cd build
+        make -j$(nproc)
+    
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-ubuntu
+        path: build/Testing/
