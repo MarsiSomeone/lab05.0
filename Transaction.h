@@ -1,6 +1,5 @@
 #pragma once
-
-class Account;
+#include "Account.h"
 
 class Transaction {
  public:

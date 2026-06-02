@@ -1,1 +1,1 @@
-/usr/bin/c++ -fPIC --coverage -O0 -g --coverage -shared -Wl,-soname,libbanking.so.1 -o libbanking.so.1.0.0 CMakeFiles/banking.dir/Account.cpp.o CMakeFiles/banking.dir/Transaction.cpp.o 
+/usr/bin/c++ -fPIC -shared -Wl,-soname,libbanking.so.1 -o libbanking.so.1.0.0 CMakeFiles/banking.dir/Account.cpp.o CMakeFiles/banking.dir/Transaction.cpp.o 

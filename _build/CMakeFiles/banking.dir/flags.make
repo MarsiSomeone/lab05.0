@@ -6,5 +6,5 @@ CXX_DEFINES = -Dbanking_EXPORTS
 
 CXX_INCLUDES = -I/home/marsi/MarsiSomeone/tasks/lab05/banking
 
-CXX_FLAGS = --coverage -O0 -g -std=c++14 -fPIC -O0 -g --coverage
+CXX_FLAGS = -std=c++14 -fPIC
 

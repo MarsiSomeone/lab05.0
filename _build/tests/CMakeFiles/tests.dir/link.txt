@@ -1,1 +1,1 @@
-/usr/bin/c++ --coverage -O0 -g --coverage --coverage CMakeFiles/tests.dir/AccountTests.cpp.o CMakeFiles/tests.dir/TransactionTest.cpp.o -o tests  -Wl,-rpath,/home/marsi/MarsiSomeone/tasks/lab05/banking/_build ../libbanking.so.1.0.0 ../lib/libgtest_main.a ../lib/libgmock.a -lpthread ../lib/libgtest.a 
+/usr/bin/c++ CMakeFiles/tests.dir/AccountTests.cpp.o CMakeFiles/tests.dir/TransactionTest.cpp.o -o tests  -Wl,-rpath,/home/marsi/MarsiSomeone/tasks/lab05/banking/_build ../libbanking.so.1.0.0 ../lib/libgtest_main.a ../lib/libgmock.a -lpthread ../lib/libgtest.a 

@@ -22,6 +22,10 @@ Transaction::Transaction() : fee_(1) {}
 
 Transaction::~Transaction() {}
 
+//void Transaction::set_fee(int fee) {
+    //fee_ = fee;
+//}
+
 bool Transaction::Make(Account& from, Account& to, int sum) {
   if (from.id() == to.id()) throw std::logic_error("invalid action");
 
@@ -29,18 +33,23 @@ bool Transaction::Make(Account& from, Account& to, int sum) {
 
   if (sum < 100) throw std::logic_error("too small");
 
-  if (fee_ * 2 > sum) return false;
+  if (fee_ * 2 >= sum) return false;
 
   Guard guard_from(from);
   Guard guard_to(to);
+  
+  int total_needed = sum + fee_;
+  if (from.GetBalance() < total_needed) {
+    return false;
+  }
+  
 
-  Credit(to, sum);
-
-  bool success = Debit(to, sum + fee_);
-  if (!success) to.ChangeBalance(-sum);
+  from.ChangeBalance(-total_needed);
+  to.ChangeBalance(sum);
 
   SaveToDataBase(from, to, sum);
-  return success;
+  
+  return true;
 }
 
 void Transaction::Credit(Account& accout, int sum) {
