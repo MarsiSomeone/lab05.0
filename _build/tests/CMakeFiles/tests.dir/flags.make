@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/marsi/MarsiSomeone/tasks/lab05/banking/tests/mocks -I/home/marsi/MarsiSomeone/tasks/lab05/banking -isystem /home/marsi/MarsiSomeone/tasks/lab05/banking/_build/_deps/googletest-src/googletest/include -isystem /home/marsi/MarsiSomeone/tasks/lab05/banking/_build/_deps/googletest-src/googletest -isystem /home/marsi/MarsiSomeone/tasks/lab05/banking/_build/_deps/googletest-src/googlemock/include -isystem /home/marsi/MarsiSomeone/tasks/lab05/banking/_build/_deps/googletest-src/googlemock
 
-CXX_FLAGS = -std=c++14
+CXX_FLAGS = --coverage -O0 -g -std=c++14 -O0 -g --coverage
 

@@ -2,14 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, br1 ]
   pull_request:
     branches: [ main, master ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Запрещаем использовать кэш
+   
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -20,7 +20,6 @@ jobs:
     
     - name: Clean everything
       run: |
-        # Полная очистка перед началом
         git clean -fdx
         git reset --hard HEAD
     
@@ -36,7 +35,15 @@ jobs:
         cmake .. -DBUILD_TESTS=ON -DCOVERAGE=ON
         make -j$(nproc)
         ctest --output-on-failure
+
+    - name: Generate coverage report with genhtml
+      run: |
+        cd build
+        lcov --capture --directory . --output-file coverage.info --no-external
+        lcov --extract coverage.info "*/Account.cpp" "*/Transaction.cpp" -o coverage_filtered.info
+        genhtml coverage_filtered.info --output-directory coverage_report --legend --demangle-cpp --function-coverage --branch-coverage
     
+
     - name: Check 100% coverage
       run: |
         cd build
@@ -45,5 +52,12 @@ jobs:
         if [ "$COVERAGE" != "100" ]; then
           echo "Coverage is $COVERAGE% (100% required)"
           exit 1
+        else
+          echo "Code Coverage is 100%"
         fi
-        echo "Code coverage is 100%"
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-html
+        path: _build/coverage_report/

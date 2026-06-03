@@ -250,3 +250,42 @@ TEST_F(TransactionTest, HighFeeWithSufficientFunds) {
     EXPECT_EQ(from.GetBalance(), 760);
     EXPECT_EQ(to.GetBalance(), 700);    
 }
+
+
+TEST_F(TransactionTest, CreditMethodTest) {
+    Account acc(1, 1000);
+    acc.Lock();  // Добавьте блокировку
+    transaction->Credit(acc, 200);
+    EXPECT_EQ(acc.GetBalance(), 1200);
+    acc.Unlock();  // Разблокировка (опционально)
+}
+
+
+TEST_F(TransactionTest, DebitMethodSuccessTest) {
+    Account acc(1, 1000);
+    acc.Lock();  // Добавьте блокировку
+    bool result = transaction->Debit(acc, 200);
+    EXPECT_TRUE(result);
+    EXPECT_EQ(acc.GetBalance(), 800);
+    acc.Unlock();
+}
+
+
+TEST_F(TransactionTest, DebitMethodBoundaryTest) {
+    Account acc(1, 200);
+    acc.Lock();  // Добавьте блокировку
+    bool result = transaction->Debit(acc, 200);
+    EXPECT_TRUE(result);
+    EXPECT_EQ(acc.GetBalance(), 0);
+    acc.Unlock();
+}
+
+
+TEST_F(TransactionTest, DebitMethodFailureTest) {
+    Account acc(1, 100);
+    acc.Lock();  // Добавьте блокировку (для консистентности)
+    bool result = transaction->Debit(acc, 200);
+    EXPECT_FALSE(result);
+    EXPECT_EQ(acc.GetBalance(), 100);
+    acc.Unlock();
+}
