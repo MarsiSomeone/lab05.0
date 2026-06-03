@@ -2,6 +2,7 @@ CMakeFiles/banking.dir/Transaction.cpp.o: \
  /home/marsi/MarsiSomeone/tasks/lab05/banking/Transaction.cpp \
  /usr/include/stdc-predef.h \
  /home/marsi/MarsiSomeone/tasks/lab05/banking/Transaction.h \
+ /home/marsi/MarsiSomeone/tasks/lab05/banking/Account.h \
  /usr/include/c++/13/cassert \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -147,5 +148,4 @@ CMakeFiles/banking.dir/Transaction.cpp.o: \
  /usr/include/c++/13/bits/locale_facets.tcc \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
- /usr/include/c++/13/bits/istream.tcc \
- /home/marsi/MarsiSomeone/tasks/lab05/banking/Account.h
+ /usr/include/c++/13/bits/istream.tcc
